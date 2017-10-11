@@ -1,7 +1,7 @@
 package utility;
 
 import java.io.*;
-import java.util.Vector;
+import java.util.*;
 
 import objects.Bot;
 import objects.Map;
@@ -9,7 +9,7 @@ import objects.Map;
 public class GameListGenerator 
 {
 
-	public static void GenerateGames(int rounds, Vector<Map> maps, Vector<Bot> bots, String TournamentType) 
+	public static void GenerateGames(int rounds, Vector<Map> maps, Vector<Bot> bots, String TournamentType, boolean RandomizeGames) 
 	{
 		try 
 		{
@@ -17,13 +17,26 @@ public class GameListGenerator
 			
 			BufferedWriter out = new BufferedWriter(fstream);
 			
+			List<Object[]> games;
 			if(TournamentType.equalsIgnoreCase("1VsAll"))
 			{
-				generate1VsAll(rounds, maps, bots, out);
+				games = generate1VsAll(rounds, maps, bots, out);
 			}
 			else
 			{
-				generateRoundRobin(rounds, maps, bots, out);
+				games = generateRoundRobin(rounds, maps, bots, out);
+			}
+			
+			if(RandomizeGames)
+			{
+				Collections.shuffle(games);
+			}
+			
+			int gameID = 0;
+			for (Object[] game : games)
+			{
+				out.write(String.format("%7d %5d %20s %20s %35s", gameID, game[0], game[1], game[2], game[3]) + System.getProperty("line.separator"));
+				gameID++;
 			}
 			
 			out.write("");
@@ -39,11 +52,10 @@ public class GameListGenerator
 		}
 	}
 
-	public static void generateRoundRobin(int rounds, Vector<Map> maps, Vector<Bot> bots, BufferedWriter out) throws IOException 
+	private static List<Object[]> generateRoundRobin(int rounds, Vector<Map> maps, Vector<Bot> bots, BufferedWriter out) throws IOException 
 	{
-		int gameID = 0;
+		List<Object[]> games = new LinkedList<>();
 		int roundNum = 0;
-		
 		for (int i = 0; i < rounds; i++) 
 		{
 			for(Map m : maps)
@@ -54,36 +66,35 @@ public class GameListGenerator
 					{						
 						if (roundNum % 2 == 0) 
 						{
-							out.write(String.format("%7d %5d %20s %20s %35s", gameID, roundNum, bots.get(j).getName(), bots.get(k).getName(), m.getMapName()) + System.getProperty("line.separator"));
-							gameID++;
+							games.add(new Object[] { roundNum, bots.get(j).getName(), bots.get(k).getName(), m.getMapName() });
 						} 
 						else 
 						{
-							out.write(String.format("%7d %5d %20s %20s %35s", gameID, roundNum, bots.get(k).getName(), bots.get(j).getName(), m.getMapName()) + System.getProperty("line.separator"));
-							gameID++;
+							games.add(new Object[] { roundNum, bots.get(k).getName(), bots.get(j).getName(), m.getMapName() });
 						}
 					}
 				}
 				roundNum++;
 			}
 		}
+		return games;
 	}
-	public static void generate1VsAll(int rounds, Vector<Map> maps, Vector<Bot> bots, BufferedWriter out) throws IOException 
+	
+	private static List<Object[]> generate1VsAll(int rounds, Vector<Map> maps, Vector<Bot> bots, BufferedWriter out) throws IOException 
 	{
-		int gameID = 0;
+		List<Object[]> games = new LinkedList<>();
 		int roundNum = 0;
-		
 		for (int i = 0; i < rounds; i++) 
 		{
 			for(Map m : maps)
 			{
 				for (int k = 1; k < bots.size(); k++) 
 				{
-					out.write(String.format("%7d %5d %20s %20s %35s", gameID, roundNum, bots.get(0).getName(), bots.get(k).getName(), m.getMapName()) + System.getProperty("line.separator"));
-					gameID++;
+					games.add(new Object[] { roundNum, bots.get(0).getName(), bots.get(k).getName(), m.getMapName() });
 				}
 				roundNum++;
 			}
 		}
+		return games;
 	}
 }

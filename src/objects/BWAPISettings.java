@@ -197,9 +197,9 @@ public class BWAPISettings implements Serializable, Cloneable
 		windowed = "ON";
 		left = "0";
 		top = "0";
-		width = "640";
-		height = "480";
-		sound = "OFF";
+		width = "1024";
+		height = "768";
+		sound = "ON";
 		screenshots = "bmp";
 		log_path = "bwapi-data\\logs";
 		show_warnings = "YES";

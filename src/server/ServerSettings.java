@@ -35,6 +35,7 @@ public class ServerSettings
 	public String			TournamentType		= "AllVsAll";
 	public boolean			EnableBotFileIO		= true;
 	public Vector<String>	ExcludeFromResults	= new Vector<String>();
+	public boolean			RandomizeGames		= false;
 	
 	public BWAPISettings	bwapi = new BWAPISettings();
 	
@@ -110,6 +111,7 @@ public class ServerSettings
 			StartGamesSimul = jo.get("startGamesSimultaneously").asBoolean();
 			TournamentType = jo.get("tournamentType").asString();
 			EnableBotFileIO = jo.get("enableBotFileIO").asBoolean();
+			RandomizeGames = jo.get("randomizeGames").asBoolean();
 			
 			JsonArray excludedBots = jo.get("excludeFromResults").asArray();
 			for (JsonValue excludedBot : excludedBots)
@@ -122,6 +124,14 @@ public class ServerSettings
 			tmSettings.LocalSpeed = tmSettingsJO.get("localSpeed").asInt();
 			tmSettings.FrameSkip = tmSettingsJO.get("frameSkip").asInt();
 			tmSettings.GameFrameLimit = tmSettingsJO.get("gameFrameLimit").asInt();
+			tmSettings.ZeroSpeedTime = tmSettingsJO.get("zeroSpeedTime").asInt();
+			tmSettings.NoKillsRealSecondsLimit = tmSettingsJO.get("noKillsRealSecondsLimit").asInt();
+			tmSettings.InitMaxSpeedTime = tmSettingsJO.get("initMaxSpeedTime").asInt();
+			tmSettings.NoCombatSpeedUpTime = tmSettingsJO.get("noCombatSpeedUpTime").asInt();
+			tmSettings.NoCombatSpeedUpDelay = tmSettingsJO.get("noCombatSpeedUpDelay").asInt();
+			tmSettings.CameraMoveTime = tmSettingsJO.get("cameraMoveTime").asInt();
+			tmSettings.CameraMoveTimeMin = tmSettingsJO.get("cameraMoveTimeMin").asInt();
+			tmSettings.WatchScoutWorkerUntil = tmSettingsJO.get("watchScoutWorkerUntil").asInt();
 			tmSettings.DrawBotNames = tmSettingsJO.get("drawBotNames").asBoolean() ? "true" : "false";
 			tmSettings.DrawTournamentInfo = tmSettingsJO.get("drawTournamentInfo").asBoolean() ? "true" : "false";
 			tmSettings.DrawUnitInfo = tmSettingsJO.get("drawUnitInfo").asBoolean() ? "true" : "false";
